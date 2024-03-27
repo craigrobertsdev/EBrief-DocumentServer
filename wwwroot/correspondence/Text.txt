@@ -1,1 +1,0 @@
-This is a test to see whether the server correctly returns files other than PDF.
