@@ -17,6 +17,7 @@ public static class DummyData {
             .StrictMode(false)
             .RuleFor(c => c.CaseFileNumber, f => caseFileNumber)
             .RuleFor(c => c.Defendant, f => new Faker<Defendant>()
+                .RuleFor(d => d.Id, f => f.UniqueIndex)
                 .RuleFor(d => d.FirstName, f => f.Name.FirstName())
                 .RuleFor(d => d.LastName, f => f.Name.LastName())
                 .Generate())
@@ -36,16 +37,16 @@ public static class DummyData {
             .RuleFor(c => c.FactsOfCharge, f => f.Lorem.Paragraphs(f.Random.Number(1, 3)))
             .RuleFor(c => c.Charges, f => Enumerable.Range(0, f.Random.Number(1, 5)).Select(i =>
                 Charges[f.Random.Number(0, Charges.Count - 1)]).ToList())
-            .RuleFor(c => c.CaseFileDocuments, f => Enumerable.Range(1, 5).Select(i =>
+            .RuleFor(c => c.CaseFileDocuments, f => Enumerable.Range(0, CaseFileDocuments.Count - 1).Select(i =>
                 new CaseFileDocument {
                     FileName = CaseFileDocuments[i].FileName,
                     Title = CaseFileDocuments[i].Title
-                }).ToList())
-            .RuleFor(c => c.OccurrenceDocuments, f => Enumerable.Range(1, 5).Select(i =>
+                }).ToList().RandomiseOrder())
+            .RuleFor(c => c.OccurrenceDocuments, f => Enumerable.Range(0, OccurrenceDocuments.Count - 1).Select(i =>
                 new OccurrenceDocument {
                     FileName = OccurrenceDocuments[i].FileName,
                     Title = OccurrenceDocuments[i].Title
-                }).ToList());
+                }).ToList().RandomiseOrder());
 
         return caseFile;
 
@@ -154,4 +155,9 @@ public static class DummyData {
             Title = "FSSA Statement of Analysis"
         },
     ];
+
+    static List<T> RandomiseOrder<T>(this List<T> list) {
+        var random = new Random();
+        return list.OrderBy(x => random.Next()).ToList();
+    }
 }

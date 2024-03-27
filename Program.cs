@@ -1,3 +1,4 @@
+using DocumentServer;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
 
@@ -34,4 +35,19 @@ app.MapGet("/correspondence/{fileName}", (string fileName) => {
     return Results.NotFound();
 });
 
+app.MapGet("/evidence/{fileName}", (string fileName) => {
+    var filePath = Path.Combine("wwwroot/evidence", fileName);
+    if (File.Exists(filePath)) {
+        var fileStream = new FileStream(filePath, FileMode.Open);
+        return Results.File(fileStream, "application/octet-stream");
+    }
+    return Results.NotFound();
+});
+
+app.MapPost("/generate-case-files", (List<string> caseFileNumbers) => {
+    var caseFiles = DummyData.GenerateCaseFiles(caseFileNumbers);
+    return Results.Ok(caseFiles);
+});
+
 app.Run();
+
