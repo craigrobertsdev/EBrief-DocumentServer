@@ -1,6 +1,4 @@
 using DocumentServer;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +24,7 @@ app.MapPost("/load-correspondence", (List<string> filePaths) => {
     }
 });
 
-app.MapGet("/correspondence/{fileName}", (string fileName) => {
+app.MapGet("/correspondence", (string fileName) => {
     var filePath = Path.Combine("wwwroot/correspondence", fileName);
     if (File.Exists(filePath)) {
         var fileStream = new FileStream(filePath, FileMode.Open);
@@ -35,7 +33,7 @@ app.MapGet("/correspondence/{fileName}", (string fileName) => {
     return Results.NotFound();
 });
 
-app.MapGet("/evidence/{fileName}", (string fileName) => {
+app.MapGet("/evidence", (string fileName) => {
     var filePath = Path.Combine("wwwroot/evidence", fileName);
     if (File.Exists(filePath)) {
         var fileStream = new FileStream(filePath, FileMode.Open);
