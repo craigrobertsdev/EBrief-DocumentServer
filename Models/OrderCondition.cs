@@ -2,7 +2,8 @@
 
 namespace DocumentServer.Models;
 
-public class OrderCondition {
+public class OrderCondition
+{
     [Key]
     public int Id { get; set; }
     public int Number { get; set; }

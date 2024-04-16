@@ -2,7 +2,8 @@
 
 namespace DocumentServer.Models;
 
-public class Information {
+public class Information
+{
     [Key]
     public int Id { get; set; }
     public List<InformationEntry> Charges { get; set; } = [];

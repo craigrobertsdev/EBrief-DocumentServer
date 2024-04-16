@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace DocumentServer.Models;
-public class CaseFile {
+public class CaseFile
+{
     public string CaseFileNumber { get; set; } = string.Empty;
     public Defendant Defendant { get; set; } = default!;
     public string? CourtFileNumber { get; set; } = string.Empty;
@@ -14,13 +15,16 @@ public class CaseFile {
     public List<OccurrenceDocument> OccurrenceDocuments { get; set; } = [];
     public string Notes { get; set; } = string.Empty;
 
-    public void GenerateInformationFromCharges() {
+    public void GenerateInformationFromCharges()
+    {
         List<InformationEntry> charges = [];
-        foreach (var charge in Charges) {
+        foreach (var charge in Charges)
+        {
             charges.Add(new InformationEntry(charge.Sequence, charge.ChargeWording));
         }
 
-        Information = new Information {
+        Information = new Information
+        {
             Charges = charges
         };
     }

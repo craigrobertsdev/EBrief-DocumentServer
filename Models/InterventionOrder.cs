@@ -2,7 +2,8 @@
 
 namespace DocumentServer.Models;
 
-public class InterventionOrder {
+public class InterventionOrder
+{
     [Key]
     public int Id { get; set; }
     public string OrderNumber { get; set; } = string.Empty;

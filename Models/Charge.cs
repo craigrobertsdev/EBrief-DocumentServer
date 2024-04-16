@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace DocumentServer.Models;
-public class Charge {
+public class Charge
+{
     [Key]
     public int Id { get; set; }
     public int Sequence { get; set; }

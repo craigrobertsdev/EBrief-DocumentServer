@@ -2,7 +2,8 @@
 
 namespace DocumentServer.Models;
 
-public class BailAgreement {
+public class BailAgreement
+{
     [Key]
     public int Id { get; set; }
     public DateTime DateEnteredInto { get; set; }
