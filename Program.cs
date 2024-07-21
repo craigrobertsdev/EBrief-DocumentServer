@@ -1,20 +1,8 @@
 using DocumentServer;
-
+using DocumentServer.Models;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -49,11 +37,35 @@ app.MapGet("/evidence", (string fileName) =>
     return Results.NotFound();
 });
 
-app.MapPost("/generate-case-files", (List<string> caseFileNumbers) =>
+app.MapPost("/generate-case-files", (CourtListDto courtList) =>
 {
-    var caseFiles = DummyData.GenerateCaseFiles(caseFileNumbers);
+    var caseFiles = DummyData.GenerateCaseFiles(courtList.CaseFileNumbers, courtList.CourtDate);
     return Results.Ok(caseFiles);
+});
+
+app.MapPost("/add-custody", (CourtListDto courtList) =>
+{
+    // for custody testing purposes
+    if (courtList.CaseFileNumbers.Count == 1)
+    {
+        var caseFile = DummyData.GenerateCaseFileWithNewDefendant(courtList.CaseFileNumbers.First());
+        var courtDate = courtList.CourtDate;
+        caseFile.Schedule.Add(new()
+        {
+            AppearanceType = "Hearing",
+            HearingDate = new(courtDate.Year, courtDate.Month, courtDate.Day, 15, 0, 0),
+            Notes = "First appearance"
+        });
+
+        return Results.Ok(new List<CaseFile>() { caseFile });
+    }
+    else
+    {
+        var caseFiles = DummyData.GenerateCaseFiles(courtList.CaseFileNumbers, courtList.CourtDate);
+        return Results.Ok(caseFiles);
+    }
 });
 
 app.Run();
 
+record CourtListDto(List<string> CaseFileNumbers, DateTime CourtDate);
