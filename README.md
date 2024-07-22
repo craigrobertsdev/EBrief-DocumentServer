@@ -1,4 +1,4 @@
-# Document Server
+# EBrief Document Server
 
 ## Table of Contents
 
