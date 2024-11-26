@@ -14,9 +14,9 @@ public static class DummyData
         _defendants = RandomiseDefendants();
     }
 
-    public static List<CaseFile> GenerateCaseFiles(List<string> caseFileNumbers, DateTime courtDate)
+    public static List<Casefile> GenerateCaseFiles(List<string> caseFileNumbers, DateTime courtDate)
     {
-        List<CaseFile> caseFiles = [];
+        List<Casefile> caseFiles = [];
         var rand = new Random();
         foreach (var caseFileNumber in caseFileNumbers)
         {
@@ -54,9 +54,9 @@ public static class DummyData
         return caseFiles;
     }
 
-    public static CaseFile GenerateCaseFile(string caseFileNumber)
+    public static Casefile GenerateCaseFile(string caseFileNumber)
     {
-        var caseFile = new Faker<CaseFile>()
+        var caseFile = new Faker<Casefile>()
             .StrictMode(false)
             .RuleFor(c => c.CaseFileNumber, f => caseFileNumber)
             .RuleFor(c => c.Defendant, f => _defendants[f.Random.Number(0, _defendants.Count - 1)])
@@ -69,7 +69,7 @@ public static class DummyData
                     Notes = _hearingNotes[f.Random.Number(0, _hearingNotes.Count - 1)]
                 }).ToList())
             .RuleFor(c => c.CfelEntries, f => Enumerable.Range(0, f.Random.Number(1, 5)).Select(i =>
-                new CaseFileEnquiryLog
+                new CasefileEnquiryLog
                 {
                     EnteredBy = $"ID {f.Random.Number(10000, 99999)}, {f.Name.FullName()}",
                     EntryDate = f.Date.Past(),
@@ -83,9 +83,9 @@ public static class DummyData
         return caseFile;
     }
 
-    public static CaseFile GenerateCaseFileWithNewDefendant(string caseFileNumber)
+    public static Casefile GenerateCaseFileWithNewDefendant(string caseFileNumber)
     {
-        var caseFile = new Faker<CaseFile>()
+        var caseFile = new Faker<Casefile>()
             .StrictMode(false)
             .RuleFor(c => c.CaseFileNumber, f => caseFileNumber)
             .RuleFor(c => c.Defendant, f => CustodyDefendant())
@@ -98,7 +98,7 @@ public static class DummyData
                     Notes = _hearingNotes[f.Random.Number(0, _hearingNotes.Count - 1)]
                 }).ToList())
             .RuleFor(c => c.CfelEntries, f => Enumerable.Range(0, f.Random.Number(1, 5)).Select(i =>
-                new CaseFileEnquiryLog
+                new CasefileEnquiryLog
                 {
                     EnteredBy = $"ID {f.Random.Number(10000, 99999)}, {f.Name.FullName()}",
                     EntryDate = f.Date.Past(),

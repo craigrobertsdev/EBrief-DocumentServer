@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace DocumentServer.Models;
-public class CaseFile
+public class Casefile
 {
     public string CaseFileNumber { get; set; } = string.Empty;
     public Defendant Defendant { get; set; } = default!;
     public string? CourtFileNumber { get; set; } = string.Empty;
     public List<HearingEntry> Schedule { get; set; } = [];
-    public List<CaseFileEnquiryLog> CfelEntries { get; set; } = [];
+    public List<CasefileEnquiryLog> CfelEntries { get; set; } = [];
     public string FactsOfCharge { get; set; } = default!;
     public Information Information { get; set; } = default!;
     public TimeSpan? TimeInCustody { get; set; }

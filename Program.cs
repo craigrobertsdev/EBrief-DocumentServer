@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using DocumentServer;
 using DocumentServer.Models;
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +42,13 @@ app.MapGet("/evidence", (string fileName) =>
 app.MapPost("/generate-case-files", (CourtListDto courtList) =>
 {
     var caseFiles = DummyData.GenerateCaseFiles(courtList.CaseFileNumbers, courtList.CourtDate);
+
+    File.WriteAllText("casefiles.json", JsonSerializer.Serialize(caseFiles, new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        ReferenceHandler = ReferenceHandler.IgnoreCycles
+    }));
+
     return Results.Ok(caseFiles);
 });
 
@@ -57,7 +66,9 @@ app.MapPost("/add-custody", (CourtListDto courtList) =>
             Notes = "First appearance"
         });
 
-        return Results.Ok(new List<CaseFile>() { caseFile });
+        caseFile.CaseFileNumber = caseFile.CaseFileNumber.ToUpper();
+
+        return Results.Ok(new List<Casefile>() { caseFile });
     }
     else
     {
@@ -66,6 +77,19 @@ app.MapPost("/add-custody", (CourtListDto courtList) =>
     }
 });
 
+app.MapPost("/update-cfels", (IEnumerable<string> casefileNumbers, string text) =>
+{
+    return Results.Ok();
+});
+
+app.MapPost("/refresh", (CasefileUpdateContent content) =>
+{
+    var savedCaseFiles = JsonSerializer.Deserialize<List<Casefile>>(File.ReadAllText("casefiles.json"));
+    var casefiles = savedCaseFiles.Where(cf => content.CasefileNumbers.Contains(cf.CaseFileNumber)).ToList();
+    return Results.Ok(casefiles);
+});
+
 app.Run();
 
 record CourtListDto(List<string> CaseFileNumbers, DateTime CourtDate);
+record CasefileUpdateContent(IEnumerable<string> CasefileNumbers);
